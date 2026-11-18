@@ -139,7 +139,14 @@
                     timeSlotsContainer.innerHTML = '';
 
                     if (slots.length === 0) {
-                        timeSlotsContainer.innerHTML = '<div style="color:#c62828; grid-column:1/-1;">На эту дату нет свободного времени.</div>';
+                        const today = new Date().toISOString().split('T')[0];
+                        let message = "На эту дату нет свободного времени.";
+
+                        if (date === today) {
+                            message = "На сегодня запись уже закрыта (рабочий день закончился или все места заняты). Пожалуйста, выберите другую дату.";
+                        }
+
+                        timeSlotsContainer.innerHTML = `<div style="color:#c62828; grid-column:1/-1;">${message}</div>`;
                         return;
                     }
 
@@ -160,7 +167,6 @@
 
                             hiddenInput.value = `${date}T${time}:00`;
 
-                            // ФИКС: Сохраняем тренера именно в момент клика по кнопке
                             if (trainerSelect) {
                                 hiddenTrainer.value = trainerSelect.value;
                             }

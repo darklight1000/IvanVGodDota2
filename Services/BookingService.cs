@@ -22,7 +22,13 @@ namespace HorseClub.Services
             var endTime = new TimeSpan(18, 0, 0);
             var step = TimeSpan.FromHours(1); // Шаг 1 час
 
-            // Получаем уже занятые слоты на эту дату
+            // 1. Если выбрана дата в прошлом — сразу возвращаем пустой список
+            if (date.Date < DateTime.Now.Date)
+            {
+                return slots;
+            }
+
+            // 2. Получаем уже занятые слоты на эту дату
             var busySlots = await _context.Bookings
                 .Where(b => b.BookingDate.Date == date.Date
                          && b.ServiceId == serviceId
@@ -31,8 +37,17 @@ namespace HorseClub.Services
                 .Select(b => b.BookingDate.TimeOfDay)
                 .ToListAsync();
 
+            var now = DateTime.Now.TimeOfDay;
+
             for (var time = startTime; time < endTime; time += step)
             {
+                // 3. Если это СЕГОДНЯ, и время уже прошло — пропускаем
+                if (date.Date == DateTime.Now.Date && time <= now)
+                {
+                    continue;
+                }
+
+                // 4. Если слот не занят — добавляем
                 if (!busySlots.Contains(time))
                 {
                     slots.Add(time);
