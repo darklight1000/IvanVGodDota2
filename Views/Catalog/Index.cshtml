@@ -1,0 +1,125 @@
+﻿@model HorseClub.Models.CatalogViewModel
+
+@{
+    ViewData["Title"] = "Каталог услуг";
+}
+
+<!-- Шапка страницы -->
+<section style="background: var(--color-primary); color:#fff; padding: 50px 0;">
+    <div class="container">
+        <h1 style="color:#fff; margin:0;">Каталог услуг</h1>
+        <p style="margin-top:12px; font-size:1.1rem; color:#e8d9bf;">
+            Обучение, прокат, экипировка — всё для верховой езды
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="display:grid; grid-template-columns: 280px 1fr; gap:32px; align-items:start;">
+
+            <!-- БОКОВАЯ ПАНЕЛЬ (ФИЛЬТРЫ) -->
+            <aside style="background:#fff; border-radius:14px; padding:24px; box-shadow: var(--shadow); position: sticky; top: 90px;">
+                <h3 style="margin-top:0; border-bottom: 2px solid var(--color-light); padding-bottom: 12px;">Фильтры</h3>
+
+                <form method="get" asp-action="Index">
+                    <!-- Категория -->
+                    <div style="margin-bottom:20px;">
+                        <label style="font-weight:600; display:block; margin-bottom:8px;">Категория</label>
+                        <select name="category" class="form-select" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+                            <option value="">Все категории</option>
+                            @foreach (var cat in Model.Categories)
+                            {
+                                if (cat == Model.SelectedCategory)
+                                {
+                                    <option value="@cat" selected>@cat</option>
+                                }
+                                else
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Цена -->
+                    <div style="margin-bottom:20px;">
+                        <label style="font-weight:600; display:block; margin-bottom:8px;">Цена, ₽</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="number" name="minPrice" value="@Model.MinPrice"
+                                   placeholder="от" min="0"
+                                   style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;" />
+                            <input type="number" name="maxPrice" value="@Model.MaxPrice"
+                                   placeholder="до" min="0"
+                                   style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;" />
+                        </div>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Применить</button>
+
+                    @if (!string.IsNullOrEmpty(Model.SelectedCategory) || Model.MinPrice.HasValue || Model.MaxPrice.HasValue)
+                    {
+                        <a href="/Catalog" class="btn" style="width:100%; background:var(--color-light); color:var(--color-primary); margin-top:8px;">Сбросить</a>
+                    }
+                </form>
+            </aside>
+
+            <!-- СЕТКА ТОВАРОВ -->
+            <div>
+                <div style="margin-bottom: 16px; color: #8a7762;">
+                    Найдено услуг: <strong>@Model.Services.Count</strong>
+                </div>
+
+                @if (!Model.Services.Any())
+                {
+                    <div style="background:#fff; padding:40px; border-radius:14px; text-align:center; color:#8a7762;">
+                        По выбранным фильтрам ничего не найдено. <br> Попробуйте изменить параметры или <a href="/Catalog">сбросить фильтры</a>.
+                    </div>
+                }
+                else
+                {
+                    <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                        @foreach (var service in Model.Services)
+                        {
+                            <div class="card" style="display:flex; flex-direction:column; height:100%;">
+                                <!-- Картинка -->
+                                @if (!string.IsNullOrEmpty(service.ImageUrl))
+                                {
+                                    <img src="@service.ImageUrl" alt="@service.Name" style="width:100%; height:200px; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <div class="card-img" style="height:200px; font-size:4rem;">🐎</div>
+                                }
+
+                                <!-- Контент -->
+                                <div class="card-body" style="display:flex; flex-direction:column; flex-grow:1;">
+                                    <div style="font-size:0.8rem; color:var(--color-accent); font-weight:600; margin-bottom:6px;">
+                                        @service.Category
+                                        @if (service.IsNew)
+                                        {
+                                            <span style="margin-left:4px;">🆕</span>
+                                        }
+                                        @if (service.IsPromo)
+                                        {
+                                            <span style="margin-left:4px;">🎁</span>
+                                        }
+                                    </div>
+
+                                    <h3 style="margin:0 0 8px; font-size:1.15rem;">@service.Name</h3>
+                                    <p style="color:#6b5b4a; font-size:0.9rem; flex-grow:1;">@service.Description</p>
+
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:16px; border-top:1px solid var(--color-light);">
+                                        <span class="card-price" style="font-size:1.2rem;">@service.Price.ToString("N0") ₽</span>
+                                        <a href="/Catalog/Details/@service.Id" class="btn btn-primary" style="padding:8px 16px; font-size:0.9rem;">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

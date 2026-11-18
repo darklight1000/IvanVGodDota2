@@ -1,0 +1,124 @@
+﻿@model IEnumerable<IvanVGodDota2.Models.Review>
+
+@{
+    ViewData["Title"] = "Отзывы";
+}
+
+<!-- Шапка -->
+<section style="background: var(--color-primary); color:#fff; padding: 50px 0;">
+    <div class="container" style="text-align: center;">
+        <h1 style="color:#fff; margin:0; font-size: 2.5rem;">Отзывы наших клиентов</h1>
+        <p style="margin-top:12px; font-size:1.1rem; color:#e8d9bf;">
+            Что говорят о нас любители лошадей
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px; align-items:start;">
+
+            <!-- ЛЕВАЯ КОЛОНКА: СПИСОК ОТЗЫВОВ -->
+            <div>
+                <h2 style="margin-top:0;">Отзывы (@Model.Count())</h2>
+
+                @if (!Model.Any())
+                {
+                    <div style="background:#fff; padding:40px; border-radius:14px; text-align:center; color:#8a7762;">
+                        Пока нет отзывов. Станьте первым!
+                    </div>
+                }
+                else
+                {
+                    <div style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">
+                        @foreach (var review in Model)
+                        {
+                            <div style="background:#fff; padding:24px; border-radius:16px; box-shadow: var(--shadow);">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                                    <div style="display:flex; gap:12px; align-items:center;">
+                                        <!-- Аватарка-кружок с первой буквой имени -->
+                                        <div style="width:48px; height:48px; background:var(--color-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:bold;">
+                                            @(review.AuthorName != null && review.AuthorName.Length > 0 ? review.AuthorName.Substring(0, 1).ToUpper() : "U")
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:700; font-size:1.1rem; color:var(--color-primary);">
+                                                @review.AuthorName
+                                            </div>
+                                            <div style="font-size:0.85rem; color:#8a7762;">
+                                                @review.CreatedAt.ToString("dd MMMM yyyy")
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color:#c79c2e; font-size:1.2rem;">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span>★</span>
+                                        }
+                                        @for (int i = review.Rating; i < 5; i++)
+                                        {
+                                            <span style="color:#e0e0e0;">★</span>
+                                        }
+                                    </div>
+                                </div>
+                                <p style="margin:0; color:#4a3a28; line-height:1.6;">
+                                    @review.Text
+                                </p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: ФОРМА ДОБАВЛЕНИЯ -->
+            <div style="background:#fff; padding:32px; border-radius:16px; box-shadow: var(--shadow); position:sticky; top:90px;">
+                <h3 style="margin-top:0; margin-bottom:20px; font-size:1.3rem;">Оставить отзыв</h3>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form method="post" asp-action="AddReview">
+                        @Html.AntiForgeryToken()
+
+                        <div style="margin-bottom:16px;">
+                            <label style="font-weight:600; display:block; margin-bottom:8px; font-size:0.95rem;">Ваше имя</label>
+                            <!-- name="AuthorName" должен совпадать с моделью -->
+                            <input type="text" name="AuthorName" value="@User.Identity.Name" readonly
+                                   style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; background:#f9f9f9; color:#666;" />
+                        </div>
+
+                        <div style="margin-bottom:16px;">
+                            <label style="font-weight:600; display:block; margin-bottom:8px; font-size:0.95rem;">Оценка</label>
+                            <select name="Rating" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd;">
+                                <option value="5">5 звёзд (Отлично)</option>
+                                <option value="4">4 звезды (Хорошо)</option>
+                                <option value="3">3 звезды (Нормально)</option>
+                                <option value="2">2 звезды (Плохо)</option>
+                                <option value="1">1 звезда (Ужасно)</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom:20px;">
+                            <label style="font-weight:600; display:block; margin-bottom:8px; font-size:0.95rem;">Текст отзыва</label>
+                            <textarea name="Text" required rows="4" placeholder="Поделитесь впечатлениями..."
+                                      style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; font-family:inherit; resize:vertical;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; font-size:1.05rem; padding:12px;">
+                            Отправить
+                        </button>
+                        <p style="text-align:center; font-size:0.8rem; color:#8a7762; margin-top:12px; margin-bottom:0;">
+                            Отзыв появится после проверки модератором.
+                        </p>
+                    </form>
+                }
+                else
+                {
+                    <div style="background:var(--color-light); padding:20px; border-radius:12px; text-align:center;">
+                        <p style="margin-top:0; color:#6b5b4a; font-size:0.95rem;">Чтобы оставить отзыв, нужно войти.</p>
+                        <a href="/Account/Login" class="btn btn-primary" style="padding:10px 20px; display:inline-block;">Войти</a>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>

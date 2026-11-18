@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "О клубе";
+}
+
+<section style="background: var(--color-primary); color:#fff; padding: 60px 0;">
+    <div class="container">
+        <h1 style="color:#fff; margin:0;">О конном клубе «Кентавр»</h1>
+        <p style="margin-top:12px; font-size:1.15rem; color:#e8d9bf;">
+            История, миссия и команда, которая делает вашу верховую езду безопасной и радостной
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width:850px;">
+        <h2>Наша история</h2>
+        <p style="line-height:1.7; font-size:1.05rem;">
+            Конный клуб «Кентавр» был основан в 2008 году группой энтузиастов —
+            спортсменов-конников, которые мечтали создать место, где каждый мог бы
+            прикоснуться к миру лошадей. Начинали с трёх лошадей и небольшого
+            манежа, а сегодня у нас 28 лошадей, два открытых поля, отапливаемая
+            конюшня и команда из 12 сотрудников.
+        </p>
+        <p style="line-height:1.7; font-size:1.05rem;">
+            За 15 лет через наши двери прошло более 5 000 учеников — от
+            пятилетних детей до взрослых, впервые севших в седло. Мы гордимся
+            тем, что многие из них стали не просто клиентами, а частью большой
+            семьи «Кентавра».
+        </p>
+
+        <h2 style="margin-top:50px;">Миссия</h2>
+        <p style="line-height:1.7; font-size:1.05rem;">
+            Сделать верховую езду доступной, безопасной и по-настоящему
+            радостной для каждого. Мы верим, что общение с лошадью — это не
+            просто спорт, а способ стать спокойнее, увереннее и счастливее.
+        </p>
+
+        <h2 style="margin-top:50px;">Преимущества</h2>
+        <ul style="line-height:2; font-size:1.05rem;">
+            <li>🏆 <strong>12 тренеров</strong> — мастера спорта и КМС с опытом от 10 лет</li>
+            <li>🐎 <strong>28 лошадей</strong> разных пород — от спокойных «первых» до спортивных</li>
+            <li>🌿 <strong>2 открытых поля, крытый манеж</strong> — занятия круглый год</li>
+            <li>🛡️ <strong>Полная безопасность</strong> — экипировка, страховка, медпункт</li>
+            <li>👨‍👩‍👧 <strong>Программы для всей семьи</strong> — от детей до пенсионеров</li>
+            <li>♿ <strong>Иппотерапия</strong> — работа с особенными детьми и взрослыми</li>
+        </ul>
+
+        <h2 style="margin-top:50px;">Команда тренеров</h2>
+        <div class="cards-grid" style="margin-top:24px;">
+            <!-- ВЫВОД ТРЕНЕРОВ ИЗ БД -->
+            @if (ViewBag.Trainers != null && ((List<HorseClub.Models.Trainer>)ViewBag.Trainers).Any())
+            {
+                @foreach (var trainer in ViewBag.Trainers as List<HorseClub.Models.Trainer>)
+                {
+                    <div class="card" style="text-align: center;">
+                        @if (!string.IsNullOrEmpty(trainer.ImageUrl))
+                        {
+                            <img src="@trainer.ImageUrl" alt="@trainer.Name" style="width:100%; height:200px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="card-img" style="font-size:4rem;">👨‍🏫</div>
+                        }
+                        <div class="card-body">
+                            <h3>@trainer.Name</h3>
+                            <p style="color:var(--color-accent); font-weight:600; font-size:0.9rem;">@trainer.Specialization</p>
+                            <p>@trainer.Description</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p style="grid-column: 1 / -1; text-align: center; color: #8a7762;">Информация о тренерах скоро появится.</p>
+            }
+        </div>
+
+        <h2 style="margin-top:50px;">Фотогалерея</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-top:20px;">
+            <div style="height:200px; background:var(--color-light); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;">🐎</div>
+            <div style="height:200px; background:var(--color-light); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;">🏇</div>
+            <div style="height:200px; background:var(--color-light); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;">🌿</div>
+            <div style="height:200px; background:var(--color-light); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:3rem;">🏆</div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<HorseClub.Models.Service>
+
+@{
+    ViewData["Title"] = "Новинки";
+}
+
+<section class="page-header">
+    <div class="container">
+        <h1>Новинки</h1>
+        <p>Свежие поступления амуниции и товаров для лошадей</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        @if (Model != null && Model.Any())
+        {
+            <div class="cards-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="card">
+                        <div class="card-img">
+                            <span class="promo-badge" style="background: var(--color-secondary);">Новинка</span>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-icon">✨</div>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <h3>@item.Name</h3>
+                            <p>@item.Description</p>
+                            <div class="card-price">@item.Price.ToString("N0") ₽</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align: center; font-size: 1.2rem; color: #6b5b4a;">Пока нет новых поступлений. Скоро что-то будет!</p>
+        }
+    </div>
+</section>

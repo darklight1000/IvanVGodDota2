@@ -1,0 +1,48 @@
+﻿@model HorseClub.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<section class="section" style="min-height:70vh; display:flex; align-items:center;">
+    <div class="container" style="max-width:480px;">
+        <div style="background:#fff; border-radius:16px; padding:40px; box-shadow: var(--shadow);">
+            <h1 style="text-align:center; margin-top:0;">Регистрация</h1>
+            <p style="text-align:center; color:#8a7762; margin-bottom:24px;">Создайте аккаунт, чтобы записываться на занятия</p>
+
+            <form method="post" asp-action="Register">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" style="color:#c62828; margin-bottom:12px;"></div>
+
+                <div style="margin-bottom:16px;">
+                    <label asp-for="FullName" style="font-weight:600; display:block; margin-bottom:6px;">Ваше имя</label>
+                    <input asp-for="FullName" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" />
+                    <span asp-validation-for="FullName" style="color:#c62828; font-size:0.85rem;"></span>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label asp-for="Email" style="font-weight:600; display:block; margin-bottom:6px;">Email</label>
+                    <input asp-for="Email" type="email" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" />
+                    <span asp-validation-for="Email" style="color:#c62828; font-size:0.85rem;"></span>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <label asp-for="Password" style="font-weight:600; display:block; margin-bottom:6px;">Пароль</label>
+                    <input asp-for="Password" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" />
+                    <span asp-validation-for="Password" style="color:#c62828; font-size:0.85rem;"></span>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <label asp-for="ConfirmPassword" style="font-weight:600; display:block; margin-bottom:6px;">Подтвердите пароль</label>
+                    <input asp-for="ConfirmPassword" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" />
+                    <span asp-validation-for="ConfirmPassword" style="color:#c62828; font-size:0.85rem;"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button>
+            </form>
+
+            <p style="text-align:center; margin-top:20px; color:#8a7762;">
+                Уже есть аккаунт? <a href="/Account/Login">Войти</a>
+            </p>
+        </div>
+    </div>
+</section>

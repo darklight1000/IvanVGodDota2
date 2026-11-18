@@ -1,0 +1,49 @@
+﻿@model HorseClub.Models.Trainer
+
+@{
+    ViewData["Title"] = "Добавить тренера";
+}
+
+<div class="container mt-5">
+    <h2>➕ Добавить тренера</h2>
+    <a asp-action="Trainers" class="btn btn-outline-secondary mb-3">← Назад к списку</a>
+
+    <div class="card shadow-sm p-4" style="max-width: 700px;">
+        <form asp-action="CreateTrainer" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-bold">Имя тренера <span class="text-danger">*</span></label>
+                <input asp-for="Name" class="form-control" required placeholder="Например: Иван Иванов" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Specialization" class="form-label fw-bold">Специализация</label>
+                <input asp-for="Specialization" class="form-control" placeholder="Например: Выездка, Конкур, Обучение новичков" />
+                <span asp-validation-for="Specialization" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label fw-bold">Ссылка на фото (URL)</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                <small class="text-muted">Оставьте пустым, если фото нет.</small>
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description" class="form-label fw-bold">Описание (опыт, достижения)</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Краткая информация о тренере..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

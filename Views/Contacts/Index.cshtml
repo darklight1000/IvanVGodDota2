@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Контакты";
+}
+
+<!-- Шапка страницы -->
+<section style="background: var(--color-primary); color:#fff; padding: 50px 0;">
+    <div class="container" style="text-align: center;">
+        <h1 style="color:#fff; margin:0; font-size: 2.5rem;">Контакты</h1>
+        <p style="margin-top:12px; font-size:1.1rem; color:#e8d9bf;">
+            Свяжитесь с нами удобным способом
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:40px; align-items:start;">
+
+            <!-- ЛЕВАЯ КОЛОНКА: ИНФОРМАЦИЯ -->
+            <div style="background:#fff; padding:40px; border-radius:16px; box-shadow: var(--shadow);">
+                <h2 style="margin-top:0; margin-bottom: 24px;">🐎 Кентавр</h2>
+
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; gap:16px; align-items:flex-start;">
+                        <div style="font-size:1.5rem;">📍</div>
+                        <div>
+                            <div style="font-weight:600; color:var(--color-primary); margin-bottom:4px;">Адрес</div>
+                            <div style="color:#6b5b4a;">г. Москва, ул. Лошадиная, д. 10</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:16px; align-items:flex-start;">
+                        <div style="font-size:1.5rem;">📞</div>
+                        <div>
+                            <div style="font-weight:600; color:var(--color-primary); margin-bottom:4px;">Телефон</div>
+                            <div style="color:#6b5b4a;">+7 (999) 123-45-67</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:16px; align-items:flex-start;">
+                        <div style="font-size:1.5rem;">✉️</div>
+                        <div>
+                            <div style="font-weight:600; color:var(--color-primary); margin-bottom:4px;">Email</div>
+                            <div style="color:#6b5b4a;">info@centaur.ru</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:16px; align-items:flex-start;">
+                        <div style="font-size:1.5rem;">🕒</div>
+                        <div>
+                            <div style="font-weight:600; color:var(--color-primary); margin-bottom:4px;">Режим работы</div>
+                            <div style="color:#6b5b4a;">Пн-Пт: 9:00 – 20:00<br>Сб-Вс: 10:00 – 18:00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Заглушка для карты -->
+                <div style="margin-top:30px; background:var(--color-light); height:200px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#8a7762; text-align:center; font-weight:600;">
+                    📍 Здесь будет карта<br>(Яндекс.Карты)
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: ФОРМА -->
+            <div style="background:#fff; padding:40px; border-radius:16px; box-shadow: var(--shadow);">
+                <h2 style="margin-top:0; margin-bottom: 24px;">Напишите нам</h2>
+
+                <form method="post" asp-action="Index">
+                    @Html.AntiForgeryToken()
+
+                    <div style="margin-bottom:20px;">
+                        <label style="font-weight:600; display:block; margin-bottom:8px;">Ваше имя</label>
+                        <input type="text" name="Name" required placeholder="Иван"
+                               style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; font-family:inherit;" />
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <label style="font-weight:600; display:block; margin-bottom:8px;">Email для связи</label>
+                        <input type="email" name="Email" required placeholder="ivan@mail.ru"
+                               style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; font-family:inherit;" />
+                    </div>
+
+                    <div style="margin-bottom:24px;">
+                        <label style="font-weight:600; display:block; margin-bottom:8px;">Сообщение</label>
+                        <textarea name="Message" required rows="5" placeholder="Здравствуйте! Хочу узнать..."
+                                  style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; font-family:inherit; resize:vertical;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%; font-size:1.05rem; padding:14px;">
+                        Отправить сообщение
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>

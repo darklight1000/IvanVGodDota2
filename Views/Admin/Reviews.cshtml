@@ -1,0 +1,41 @@
+﻿@model IEnumerable<IvanVGodDota2.Models.Review>
+
+<div class="container mt-5">
+    <h2>💬 Управление отзывами</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary mb-3">← Назад в админку</a>
+
+    <table class="table table-striped shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Автор</th>
+                <th>Текст</th>
+                <th>Оценка</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var review in Model)
+                {
+                    <tr>
+                        <td>@review.AuthorName</td>
+                        <td>@review.Text</td>
+                        <td>@review.Rating ★</td>
+                        <td>@review.CreatedAt.ToShortDateString()</td>
+                        <td>
+                            <form asp-action="DeleteReview" asp-route-id="@review.Id" method="post" onsubmit="return confirm('Удалить отзыв?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="5" class="text-center">Отзывов пока нет.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

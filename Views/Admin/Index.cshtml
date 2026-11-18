@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Админ-панель";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">⚙️ Панель управления Кентавром</h1>
+    <p class="text-muted">Выберите раздел для управления.</p>
+
+    <div class="row mt-4">
+        <!-- Пользователи -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">👥</h3>
+                <h4>Пользователи</h4>
+                <p>Управление доступом и ролями</p>
+                <a asp-action="Users" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Каталог -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">📦</h3>
+                <h4>Каталог (Услуги)</h4>
+                <p>Редактирование списка услуг и цен</p>
+                <a asp-action="Services" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Акции -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">🔥</h3>
+                <h4>Акции</h4>
+                <p>Управление специальными предложениями</p>
+                <a asp-action="Promotions" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Новинки -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">✨</h3>
+                <h4>Новинки</h4>
+                <p>Управление новыми поступлениями</p>
+                <a asp-action="NewArrivals" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Бренды -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">🏷️</h3>
+                <h4>Бренды</h4>
+                <p>Управление списком брендов</p>
+                <a asp-action="Brands" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Отзывы -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">💬</h3>
+                <h4>Отзывы</h4>
+                <p>Модерация отзывов пользователей</p>
+                <a asp-action="Reviews" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+
+        <!-- Бронирования -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <h3 class="display-4">📅</h3>
+                <h4>Бронирования</h4>
+                <p>Управление заявками на тренировки</p>
+                <a class="btn btn-primary mt-auto" href="/Admin/Bookings">Перейти</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 text-center p-4">
+                <div style="font-size: 3rem;">👨‍🏫</div>
+                <h3 class="mt-3">Тренеры</h3>
+                <p class="text-muted">Управление списком тренеров клуба</p>
+                <a href="/Admin/Trainers" class="btn btn-primary mt-auto">Перейти</a>
+            </div>
+        </div>
+    </div>
+</div>

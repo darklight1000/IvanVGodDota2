@@ -1,0 +1,73 @@
+﻿@model HorseClub.Models.Service
+
+@{
+    ViewData["Title"] = "Добавление услуги";
+}
+
+<div class="container mt-5">
+    <h2>➕ Добавление новой услуги</h2>
+    <a asp-action="Services" class="btn btn-outline-secondary mb-3">← Назад к списку услуг</a>
+
+    <div class="card shadow-sm p-4 col-md-8">
+        <form asp-action="CreateService" method="post">
+            <!-- Блок для вывода ошибок валидации -->
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Название</label>
+                <input asp-for="Name" class="form-control" placeholder="Например: Индивидуальная тренировка" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Category" class="form-label">Категория</label>
+                <select asp-for="Category" class="form-select">
+                    <option value="Обучение">Обучение</option>
+                    <option value="Прокат">Прокат</option>
+                    <option value="Экипировка">Экипировка</option>
+                    <option value="Иппотерапия">Иппотерапия</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Описание</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Подробное описание услуги..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Цена (₽)</label>
+                <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label">Ссылка на картинку (URL)</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <div class="form-text">Оставьте пустым, если картинки нет. Тогда появится эмодзи.</div>
+            </div>
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input asp-for="IsPromo" class="form-check-input" />
+                <label asp-for="IsPromo" class="form-check-label">Это акция (появится на странице «Акции»)</label>
+            </div>
+
+            <div class="form-check mb-4">
+                <input asp-for="IsNew" class="form-check-input" />
+                <label asp-for="IsNew" class="form-check-label">Это новинка (появится на странице «Новинки»)</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить услугу</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

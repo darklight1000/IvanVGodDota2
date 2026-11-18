@@ -1,0 +1,186 @@
+﻿@model HorseClub.Models.Service
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="section">
+    <div class="container">
+        <p style="color:#8a7762; font-size:0.9rem; margin-bottom:24px;">
+            <a href="/Catalog" style="color:var(--color-primary); font-weight:600;">Каталог</a> → @Model.Category → @Model.Name
+        </p>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:40px; align-items:start;">
+            <div>
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="@Model.Name" style="width:100%; border-radius:16px; box-shadow: var(--shadow); object-fit:cover; max-height:500px;" />
+                }
+                else
+                {
+                    <div style="height:400px; background:var(--color-light); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:5rem;">🐎</div>
+                }
+            </div>
+
+            <div>
+                <div style="margin-bottom:16px;">
+                    <span style="background:var(--color-light); color:var(--color-primary); padding:6px 12px; border-radius:6px; font-size:0.85rem; font-weight:600;">@Model.Category</span>
+                    @if (Model.IsNew)
+                    {
+                        <span style="background:#e8f5e9; color:#2e7d32; padding:6px 12px; border-radius:6px; font-size:0.85rem; font-weight:600; margin-left:6px;">🆕 Новинка</span>
+                    }
+                    @if (Model.IsPromo)
+                    {
+                        <span style="background:#fff3e0; color:#e65100; padding:6px 12px; border-radius:6px; font-size:0.85rem; font-weight:600; margin-left:6px;">🎁 Акция</span>
+                    }
+                </div>
+
+                <h1 style="margin-top:0; margin-bottom:16px;">@Model.Name</h1>
+                <p style="font-size:1.1rem; line-height:1.7; color:#4a3a28; margin-bottom:24px;">@Model.Description</p>
+
+                <div style="font-size:2.2rem; font-weight:700; color:var(--color-accent); margin-bottom:32px;">
+                    @Model.Price.ToString("N0") ₽
+                </div>
+
+                <div style="background:#fff; padding:24px; border-radius:16px; box-shadow: var(--shadow); margin-bottom:24px;">
+                    <h3 style="margin-top:0; margin-bottom:16px; font-size:1.2rem;">Запись на услугу</h3>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <form method="post" asp-controller="Cart" asp-action="Add" id="bookingForm">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="serviceId" value="@Model.Id" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <input type="hidden" name="trainerId" id="hiddenTrainerId" />
+                            <input type="hidden" name="bookingDate" id="hiddenBookingDate" required />
+
+                            @if (ViewBag.Trainers != null && ((List<HorseClub.Models.Trainer>)ViewBag.Trainers).Any())
+                            {
+                                <div style="margin-bottom:16px;">
+                                    <label style="font-weight:600; display:block; margin-bottom:8px;">Выберите тренера</label>
+                                    <select id="trainerSelect" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd;">
+                                        <option value="">Любой тренер</option>
+                                        @foreach (var trainer in ViewBag.Trainers as List<HorseClub.Models.Trainer>)
+                                        {
+                                            <option value="@trainer.Id">@trainer.Name (@trainer.Specialization)</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+
+                            <div style="margin-bottom:16px;">
+                                <label style="display:block; font-weight:600; margin-bottom:8px;">Выберите дату</label>
+                                <input type="date" id="datePicker" required
+                                       min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                       value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                       style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd;" />
+                            </div>
+
+                            <div style="margin-bottom:20px;">
+                                <label style="display:block; font-weight:600; margin-bottom:8px;">Свободное время</label>
+                                <div id="timeSlots" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:8px;">
+                                    <div style="color:#8a7762; grid-column:1/-1;">Загрузка времени...</div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%; font-size:1.05rem; padding:14px;" disabled>
+                                📅 Забронировать
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div style="background:var(--color-light); padding:20px; border-radius:12px; text-align:center;">
+                            <p style="margin-top:0; color:#6b5b4a;">Чтобы записаться на занятие, вам нужно войти в систему.</p>
+                            <div style="display:flex; gap:12px; justify-content:center;">
+                                <a href="/Account/Login" class="btn btn-primary" style="padding:10px 20px;">Войти</a>
+                                <a href="/Account/Register" class="btn" style="background:#fff; color:var(--color-primary); padding:10px 20px;">Регистрация</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <a href="/Catalog" style="color:var(--color-primary); font-weight:600; display:inline-flex; align-items:center; gap:8px;">← Вернуться в каталог</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const datePicker = document.getElementById('datePicker');
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const hiddenInput = document.getElementById('hiddenBookingDate');
+            const hiddenTrainer = document.getElementById('hiddenTrainerId');
+            const submitBtn = document.getElementById('submitBtn');
+            const trainerSelect = document.getElementById('trainerSelect');
+
+            const serviceId = @Model.Id;
+
+            async function loadSlots() {
+                timeSlotsContainer.innerHTML = '<div style="color:#8a7762; grid-column:1/-1;">Загрузка времени...</div>';
+                submitBtn.disabled = true;
+                hiddenInput.value = '';
+
+                const date = datePicker.value;
+                if (!date) return;
+
+                let trainerId = "";
+                if (trainerSelect) {
+                    trainerId = trainerSelect.value;
+                }
+
+                const url = `/Catalog/GetSlots?date=${date}&serviceId=${serviceId}&trainerId=${trainerId}`;
+
+                try {
+                    const response = await fetch(url);
+                    const slots = await response.json();
+
+                    timeSlotsContainer.innerHTML = '';
+
+                    if (slots.length === 0) {
+                        timeSlotsContainer.innerHTML = '<div style="color:#c62828; grid-column:1/-1;">На эту дату нет свободного времени.</div>';
+                        return;
+                    }
+
+                    slots.forEach(time => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.innerText = time;
+                        btn.style.cssText = 'padding:10px; border-radius:8px; border:1px solid var(--color-primary); background:#fff; color:var(--color-primary); font-weight:600; cursor:pointer; transition:0.2s;';
+
+                        btn.onclick = function () {
+                            Array.from(timeSlotsContainer.children).forEach(b => {
+                                b.style.background = '#fff';
+                                b.style.color = 'var(--color-primary)';
+                            });
+
+                            btn.style.background = 'var(--color-primary)';
+                            btn.style.color = '#fff';
+
+                            hiddenInput.value = `${date}T${time}:00`;
+
+                            // ФИКС: Сохраняем тренера именно в момент клика по кнопке
+                            if (trainerSelect) {
+                                hiddenTrainer.value = trainerSelect.value;
+                            }
+
+                            submitBtn.disabled = false;
+                        };
+
+                        timeSlotsContainer.appendChild(btn);
+                    });
+                } catch (e) {
+                    timeSlotsContainer.innerHTML = '<div style="color:#c42828; grid-column:1/-1;">Ошибка загрузки данных.</div>';
+                }
+            }
+
+            loadSlots();
+            datePicker.addEventListener('change', loadSlots);
+
+            if (trainerSelect) {
+                trainerSelect.addEventListener('change', loadSlots);
+            }
+        });
+    </script>
+}

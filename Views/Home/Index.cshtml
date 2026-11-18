@@ -1,0 +1,205 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+
+<!-- ============ БАННЕР-СЛАЙДЕР ============ -->
+<section class="hero" style="background-image: url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=1600');">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="hero-content">
+            <h1>Откройте мир верховой езды</h1>
+            <p>
+                Обучение с опытными тренерами, прогулки по живописным маршрутам,
+                прокат спокойных и обученных лошадей. Первое занятие — со скидкой 30%!
+            </p>
+            <div class="hero-buttons">
+                <a href="/Catalog" class="btn btn-primary">Записаться на занятия</a>
+                <a href="/Catalog" class="btn btn-outline">Посмотреть каталог</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- ============ АКЦИИ ============ -->
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-title">
+            <h2>Акции и специальные предложения</h2>
+            <p>Следите за нашими скидками и не упускайте выгоду</p>
+        </div>
+        <div class="cards-grid">
+            @if (ViewBag.Promotions != null)
+            {
+                @foreach (var promo in ViewBag.Promotions as List<HorseClub.Models.Service>)
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(promo.ImageUrl))
+                        {
+                            <img src="@promo.ImageUrl" alt="@promo.Name" style="width:100%; height:180px; object-fit:cover;" />
+                        }
+                        <div class="card-body">
+                            <h3>@promo.Name</h3>
+                            <p>@promo.Description</p>
+                            <a href="/Catalog/Details/@promo.Id" class="btn btn-primary"
+                               style="padding:10px 20px;font-size:0.9rem;">Подробнее</a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/Promotions" class="btn btn-primary">Все акции</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============ НОВИНКИ ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Новинки</h2>
+            <p>Новые услуги и поступления</p>
+        </div>
+        <div class="cards-grid">
+            @if (ViewBag.NewArrivals != null)
+            {
+                @foreach (var item in ViewBag.NewArrivals as List<HorseClub.Models.Service>)
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" style="width:100%; height:180px; object-fit:cover;" />
+                        }
+                        <div class="card-body">
+                            <h3>@item.Name</h3>
+                            <p>@item.Description</p>
+                            <div class="card-price">@item.Price.ToString("N0") ₽</div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/NewArrivals" class="btn btn-primary">Все новинки</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============ КАТАЛОГ ============ -->
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-title">
+            <h2>Каталог услуг</h2>
+            <p>Выберите то, что подойдёт именно вам</p>
+        </div>
+        <div class="cards-grid">
+            @if (ViewBag.PopularServices != null)
+            {
+                @foreach (var item in ViewBag.PopularServices as List<HorseClub.Models.Service>)
+                {
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" style="width:100%; height:180px; object-fit:cover;" />
+                        }
+                        <div class="card-body">
+                            <div style="font-size:0.8rem; color:var(--color-accent); font-weight:600; margin-bottom:4px;">@item.Category</div>
+                            <h3>@item.Name</h3>
+                            <p>@item.Description</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span class="card-price">@item.Price.ToString("N0") ₽</span>
+                                <a href="/Catalog/Details/@item.Id" class="btn btn-primary" style="padding:8px 16px; font-size:0.9rem;">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/Catalog" class="btn btn-primary">Весь каталог</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ОТЗЫВЫ ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Отзывы клиентов</h2>
+            <p>Что о нас говорят</p>
+        </div>
+        <div class="cards-grid">
+            @if (ViewBag.Reviews != null && ((List<IvanVGodDota2.Models.Review>)ViewBag.Reviews).Any())
+            {
+                @foreach (var review in ViewBag.Reviews as List<IvanVGodDota2.Models.Review>)
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Аватарка-кружок с первой буквой имени -->
+                            <div style="width:50px; height:50px; background:var(--color-light); color:var(--color-primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold; margin-bottom:12px;">
+                                @(review.AuthorName != null && review.AuthorName.Length > 0 ? review.AuthorName.Substring(0, 1).ToUpper() : "U")
+                            </div>
+                            <h3>@review.AuthorName</h3>
+                            <p style="color:#c79c2e; font-size:1.2rem; margin:4px 0;">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <span>★</span>
+                                }
+                                @for (int i = review.Rating; i < 5; i++)
+                                {
+                                    <span style="color:#e0e0e0;">★</span>
+                                }
+                            </p>
+                            <p>@review.Text</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p style="text-align:center; grid-column: 1 / -1; color:#8a7762;">
+                    Пока нет отзывов. <a href="/Reviews" style="color:var(--color-primary); font-weight:600;">Оставьте первый!</a>
+                </p>
+            }
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/Reviews" class="btn btn-primary">Все отзывы</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ИНФОРМАЦИЯ О КЛУБЕ ============ -->
+<section class="section section-alt">
+    <div class="container" style="max-width:800px; text-align:center;">
+        <h2>О клубе «Кентавр»</h2>
+        <p style="font-size:1.1rem; line-height:1.7; color:#4a3a28;">
+            Мы работаем с 2008 года и за это время помогли более 5 000 человек
+            подружиться с лошадьми. Наша миссия — сделать верховую езду доступной,
+            безопасной и по-настоящему радостной для каждого.
+        </p>
+        <a href="/About" class="btn btn-primary" style="margin-top:20px;">Подробнее о клубе</a>
+    </div>
+</section>
+
+<!-- ============ КОНТАКТЫ ============ -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Как нас найти</h2>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:32px; align-items:start;">
+            <div>
+                <h3 style="font-size:1.1rem;">Контакты</h3>
+                <p><strong>Адрес:</strong> г. Москва, ул. Луговая, 12</p>
+                <p><strong>Телефон:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                <p><strong>Email:</strong> <a href="mailto:info@kentavr.ru">info@kentavr.ru</a></p>
+                <p><strong>Часы работы:</strong> ежедневно, 8:00 — 21:00</p>
+            </div>
+            <div style="background:var(--color-light); border-radius:14px; min-height:240px; display:flex; align-items:center; justify-content:center; color:#8a7762; text-align:center; padding:20px;">
+                📍 Здесь будет карта<br>(подключим Яндекс.Карты позже)
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<HorseClub.Models.Brand>
+
+@{
+    ViewData["Title"] = "Бренды";
+}
+
+<!-- Шапка страницы -->
+<section style="background-color: #6B4A2B; color: white; padding: 60px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <h1 style="font-family: Georgia, serif; font-size: 3rem; margin: 0 0 15px 0; color: white;">Наши бренды</h1>
+        <p style="font-size: 1.2rem; margin: 0; color: #F3EAD9;">
+            Мы работаем только с проверенными производителями экипировки и амуниции
+        </p>
+    </div>
+</section>
+
+<!-- Основной контент -->
+<section style="padding: 60px 0; background-color: #FAF6EF; min-height: 50vh;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+
+        @if (Model == null || !Model.Any())
+        {
+            <!-- Красивая заглушка -->
+            <div style="background: white; border-radius: 16px; padding: 60px 40px; text-align: center; box-shadow: 0 10px 30px rgba(107, 74, 43, 0.08);">
+                <div style="font-size: 5rem; margin-bottom: 20px;">🤝</div>
+                <h2 style="font-family: Georgia, serif; color: #6B4A2B; font-size: 2rem; margin-top: 0; margin-bottom: 16px;">
+                    Мы формируем список партнеров
+                </h2>
+                <p style="color: #6b5b4a; font-size: 1.1rem; line-height: 1.6; max-width: 600px; margin: 0 auto 30px auto;">
+                    В нашем клубе используется только качественная и проверенная экипировка.
+                    Совсем скоро здесь появятся логотипы и описания наших любимых брендов.
+                </p>
+                <a href="/Catalog" style="display: inline-block; background-color: #6B4A2B; color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; transition: background-color 0.2s;">
+                    Перейти в каталог
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Сетка брендов (если они есть) -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
+                @foreach (var brand in Model)
+                {
+                    <div style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 4px 20px rgba(107, 74, 43, 0.12); display: flex; flex-direction: column; align-items: center;">
+                        @if (!string.IsNullOrEmpty(brand.LogoUrl))
+                        {
+                            <img src="@brand.LogoUrl" alt="@brand.Name" style="height: 80px; object-fit: contain; margin-bottom: 20px;" />
+                        }
+                        else
+                        {
+                            <div style="width: 80px; height: 80px; background: #F3EAD9; color: #6B4A2B; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; margin-bottom: 20px;">
+                                @(brand.Name != null && brand.Name.Length > 0 ? brand.Name.Substring(0, 1).ToUpper() : "B")
+                            </div>
+                        }
+
+                        <h3 style="font-family: Georgia, serif; color: #6B4A2B; font-size: 1.5rem; margin-top: 0; margin-bottom: 12px;">@brand.Name</h3>
+
+                        <p style="color: #6b5b4a; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1;">
+                            @(string.IsNullOrEmpty(brand.Description) ? "Официальный партнер конного клуба «Кентавр»." : brand.Description)
+                        </p>
+
+                        <a href="/Catalog" style="display: block; width: 100%; border: 2px solid #6B4A2B; color: #6B4A2B; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; box-sizing: border-box;">
+                            Смотреть товары
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

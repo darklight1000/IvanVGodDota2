@@ -1,0 +1,58 @@
+﻿@model IEnumerable<HorseClub.Models.Service>
+
+@{
+    ViewData["Title"] = "Управление акциями";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>🔥 Управление акциями</h2>
+        <a asp-action="CreateService" class="btn btn-success">+ Добавить акцию</a>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary mb-3">← Назад в админку</a>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-striped shadow-sm align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Price.ToString("N0") ₽</td>
+                        <td>
+                            <span class="badge bg-danger">Акция</span>
+                            @if (item.IsNew)
+                            {
+                                <span class="badge bg-success">Новинка</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="EditService" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Ред.</a>
+                                <form asp-action="DeleteService" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Удалить акцию?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Удал.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Пока нет услуг, отмеченных как «Акция».
+            <a asp-action="CreateService" class="alert-link">Создайте новую</a> или отметьте галочку в существующей услуге.
+        </div>
+    }
+</div>

@@ -1,0 +1,97 @@
+﻿@model List<HorseClub.Models.Booking>
+@{
+    ViewData["Title"] = "Управление бронированиями";
+}
+
+<div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1>Управление бронированиями</h1>
+        <a href="/Admin" class="btn btn-outline-secondary" style="border:1px solid #ccc; border-radius:8px; padding:8px 16px; color:#333; text-decoration:none;">← Назад в админку</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="background:#fff; padding:40px; border-radius:14px; text-align:center; color:#8a7762; box-shadow: 0 4px 20px rgba(107, 74, 43, 0.12);">
+            Пока нет ни одного бронирования или заказа.
+        </div>
+    }
+    else
+    {
+        <div style="background:#fff; border-radius:14px; box-shadow: 0 4px 20px rgba(107, 74, 43, 0.12); overflow:hidden;">
+            <table style="width:100%; border-collapse: collapse; text-align:left;">
+                <thead style="background:var(--color-primary); color:#fff;">
+                    <tr>
+                        <th style="padding:16px;">ID</th>
+                        <th style="padding:16px;">Услуга / Товар</th>
+                        <th style="padding:16px;">Тренер</th> <!-- НОВАЯ КОЛОНКА -->
+                        <th style="padding:16px;">Пользователь (Email)</th>
+                        <th style="padding:16px;">Дата и время</th>
+                        <th style="padding:16px;">Кол-во</th>
+                        <th style="padding:16px;">Статус</th>
+                        <th style="padding:16px;">Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:16px;">@booking.Id</td>
+
+                            <!-- Услуга -->
+                            <td style="padding:16px;">
+                                <strong>@(booking.Service?.Name ?? "Услуга удалена")</strong>
+                                <div style="font-size:0.8rem; color:#8a7762;">@(booking.Service?.Category ?? "-")</div>
+                            </td>
+
+                            <!-- Тренер -->
+                            <td style="padding:16px;">
+                                @if (booking.Trainer != null)
+                                {
+                                    <span style="font-weight:600; color:var(--color-primary);">👨‍🏫 @booking.Trainer.Name</span>
+                                    <div style="font-size:0.8rem; color:#8a7762;">@booking.Trainer.Specialization</div>
+                                }
+                                else
+                                {
+                                    <span style="color:#8a7762;">Не выбран</span>
+                                }
+                            </td>
+
+                            <!-- Пользователь -->
+                            <td style="padding:16px;">@(booking.User?.Email ?? "Неизвестно")</td>
+
+                            <!-- Дата -->
+                            <td style="padding:16px;">@booking.BookingDate.ToString("dd.MM.yyyy HH:mm")</td>
+
+                            <!-- Количество -->
+                            <td style="padding:16px;">@booking.Quantity шт.</td>
+
+                            <!-- Статус -->
+                            <td style="padding:16px;">
+                                <span style="padding:4px 10px; border-radius:6px; font-size:0.85rem; font-weight:600;
+                                    @(booking.Status == "Ожидает" ? "background:#fff3e0; color:#e65100;" : "")
+                                    @(booking.Status == "Подтверждено" ? "background:#e8f5e9; color:#2e7d32;" : "")
+                                    @(booking.Status == "Отменено" ? "background:#ffebee; color:#c62828;" : "")">
+                                    @booking.Status
+                                </span>
+                            </td>
+
+                            <!-- Действие -->
+                            <td style="padding:16px;">
+                                <form method="post" asp-action="UpdateBookingStatus" style="display:flex; gap:8px; align-items:center;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@booking.Id" />
+                                    <select name="status" class="form-select" style="padding:6px; border-radius:6px; border:1px solid #ccc; font-size:0.9rem;">
+                                        <option value="Ожидает" selected="@(booking.Status == "Ожидает")">Ожидает</option>
+                                        <option value="Подтверждено" selected="@(booking.Status == "Подтверждено")">Подтверждено</option>
+                                        <option value="Отменено" selected="@(booking.Status == "Отменено")">Отменено</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary" style="padding:6px 12px; font-size:0.85rem;">ОК</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

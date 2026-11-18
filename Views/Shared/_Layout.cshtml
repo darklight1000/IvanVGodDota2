@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Конный клуб «Кентавр»</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+            /* Стили для кнопки выхода в шапке */
+            .logout-form {
+                display: inline;
+                margin: 0;
+                padding: 0;
+            }
+
+            .btn-logout {
+                background: none;
+                border: none;
+                color: var(--color-text);
+                font-weight: 500;
+                font-size: 0.95rem;
+                padding: 10px 14px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+                .btn-logout:hover {
+                    background: #ffebee;
+                    color: #c62828;
+                }
+
+            .nav-user {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- ============== ШАПКА ============== -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">🐎</span>
+                <span>Кентавр</span>
+            </a>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/About">О клубе</a></li>
+                    <li><a href="/Catalog">Каталог</a></li>
+                    <li><a href="/Promotions">Акции</a></li>
+                    <li><a href="/NewArrivals">Новинки</a></li>
+                    <li><a href="/Brands">Бренды</a></li>
+                    <li><a href="/Reviews">Отзывы</a></li>
+                    <li><a href="/Contacts">Контакты</a></li>
+                    <li><a href="/Cart">🛒 Корзина</a></li>
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a href="/Admin" style="color: #c62828; font-weight: bold;">⚙️ Админ-панель</a></li>
+                        }
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <li><a href="/Admin/Bookings">📋 Бронирования</a></li>
+                        }
+
+                        <li class="nav-user">
+                            <a href="/Account" title="Личный кабинет">👤 @User.Identity?.Name</a>
+                            <form method="post" asp-controller="Account" asp-action="Logout" class="logout-form">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-logout" title="Выйти из аккаунта">Выйти</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="/Account/Login">Войти</a></li>
+                        <li><a href="/Account/Register">Регистрация</a></li>
+                    }
+                </ul>
+            </nav>
+
+            <div class="header-contacts">
+                <a href="tel:+74951234567" class="header-phone">+7 (495) 123-45-67</a>
+                <div class="social-links">
+                    <a href="#" title="Telegram">TG</a>
+                    <a href="#" title="VK">VK</a>
+                    <a href="#" title="WhatsApp">WA</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============== КОНТЕНТ СТРАНИЦЫ ============== -->
+    <!-- Добавлен класс flex-grow-1 -->
+    <main class="flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <!-- ============== ПОДВАЛ ============== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>🐎 Кентавр</h4>
+                    <p style="font-size:0.9rem; color:#b8a990;">
+                        Конный клуб с 2008 года. Обучение верховой езде, прокат лошадей, иппотерапия.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Разделы</h4>
+                    <ul>
+                        <li><a href="/About">О клубе</a></li>
+                        <li><a href="/Catalog">Каталог</a></li>
+                        <li><a href="/Promotions">Акции</a></li>
+                        <li><a href="/Reviews">Отзывы</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Контакты</h4>
+                    <ul>
+                        <li>📍 г. Москва, ул. Луговая, 12</li>
+                        <li>📞 <a href="tel:+74951234567">+7 (495) 123-45-67</a></li>
+                        <li>✉️ <a href="mailto:info@kentavr.ru">info@kentavr.ru</a></li>
+                        <li>🕒 Ежедневно 8:00 — 21:00</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Документы</h4>
+                    <ul>
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                        <li><a href="#">Пользовательское соглашение</a></li>
+                        <li><a href="#">Команда разработчиков</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2024 Конный клуб «Кентавр». Все права защищены. | Техническая поддержка: dev@kentavr.ru
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
